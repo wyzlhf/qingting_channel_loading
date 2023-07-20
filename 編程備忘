@@ -98,3 +98,6 @@ print(result)
 
 server.stop()
 driver.quit()
+
+
+写完后第一次运行，经历了程序崩溃，其实还应该有重启继续的逻辑，就是把program_id存下来，哪个已经有了，就跳过去，直接下载下一个。

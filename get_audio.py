@@ -9,10 +9,13 @@ from utils import create_folder, get_channel_name
 
 
 class AudioLoader(object):
-    def __init__(self, channel_id: str, program_id: str):
+    def __init__(self, channel_id: str, program_id: str,audio_name:str,audio_write_path:str=None):
         self.channel_id: str = channel_id
         self.program_id: str = program_id
         self.program_url: str = f'https://m.qtfm.cn/vchannels/{self.channel_id}/programs/{self.program_id}/'
+
+        actual_audio_url:str=self.get_actual_audio_url()
+        self.load_audio_and_write(actual_audio_url,audio_name,audio_write_path)
 
     def get_actual_audio_url(self) -> str:
         BMPserver = Server(r'C:\Program Files\browsermob-proxy-2.1.4\bin\browsermob-proxy.bat')
@@ -59,6 +62,7 @@ class AudioLoader(object):
     def load_audio_and_write(self, audio_url: str,audio_name:str,write_path:str=None)->None:
         audio_response=requests.get(audio_url)
         if write_path:
+            # create_folder()
             audio_path_and_name:str=write_path+'\\'+audio_name+'.m4a'
         else:
             audio_path_and_name: str = audio_name + '.m4a'
@@ -72,4 +76,4 @@ if __name__ == '__main__':
     # print(actual_audio_url)
 
     audio_url='https://hwod-sign.qtfm.cn/m4a/5e8ca251d93ae56daab7b5ac_16198450_24.m4a?auth_key=64ba4728-143846-0-3447ead912a30b25dfe23afb120fcb85'
-    audio_loader.load_audio_and_write(audio_url,'aaa','D:\CODE\PYTHON')
+    audio_loader.load_audio_and_write(audio_url,'bbb','D:\CODE\PYTHON')
