@@ -1,0 +1,100 @@
+需要的链接：[11.0]太虚大师全书.第十一编.真现实论宗依论（上）.叙论.〖作者：.太虚法师〗(南普陀.太虚图书馆.太虚法师).
+https://hwod-sign.qtfm.cn/m4a/5e89a30dd93ae5ef53b77cf8_16183934_24.m4a?auth_key=64aafc94-318110-0-40dcedea934b35e5508c781bcb540356
+https://audio.qtfm.cn/audiostream/redirect/353596/14647412?access_token=&device_id=MOBILESITE&qingting_id=&t=1689656436959&sign=5eec3672ee8b48c7dded7f6fdd623c32
+https://hwod-sign.qtfm.cn/m4a/5e8ca251d93ae56daab7b5ac_16198450_24.m4a?auth_key=64ba4728-143846-0-3447ead912a30b25dfe23afb120fcb85
+
+比較好的一個程序，使用代理：
+
+import time
+import json
+import re
+import requests
+from browsermobproxy import Server
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
+
+def main():
+    # 开启代理
+    BMPserver = Server(r'C:\Program Files\browsermob-proxy-2.1.4\bin\browsermob-proxy.bat')
+    BMPserver.start()
+    BMPproxy = BMPserver.create_proxy()
+
+    # 配置代理启动webdriver
+    chrome_options = Options()
+    chrome_options.add_argument('--ignore-certificate-errors')
+    chrome_options.add_argument('--proxy-server={}'.format(BMPproxy.proxy))
+    # 隐藏窗口
+    # chrome_options.add_argument("--headless")
+    # chrome_options.add_argument(
+    #     '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36')
+    # chrome_options.add_argument('--no-sandbox')
+    # chrome_options.add_argument('--disable-gpu')
+    # chrome_options.add_argument('--disable-dev-shm-usage')
+    brosver = webdriver.Chrome(options=chrome_options)
+
+    # 获取返回内容
+    url = "https://www.qtfm.cn/channels/353596/programs/14647412/"
+    BMPproxy.new_har("video", options={'captureContent': True, 'captureContent': True})
+
+    # 模拟浏览器
+    brosver.get(url)
+    # brosver.find_element_by_xpath('//*[@id="kw"]').send_keys("python")
+    # brosver.find_element_by_xpath('//*[@id="su"]').click()
+
+    json_data = BMPproxy.har
+    # 将json数据存储到本地
+    # result_json = json.dumps(json_data,indent=4)
+    # with open("baidu.json", "w", errors="igone") as f:
+    # f.write(result_json)
+
+    # for entry in json_data['log']['entries']:
+    #     # 根据URL找到数据接口
+    #     entry_url = entry['request']['url']
+    #     # 获取接口返回内容
+    #     print(entry_url)
+    # print(json_data)
+    with open('1.txt','w')as f:
+        f.write(json.dumps(json_data))
+        print('写入完成')
+
+if __name__ == '__main__':
+    main()
+
+
+
+
+
+
+
+一次可用的代码调试：
+from browsermobproxy import Server
+
+base_url = 'https://www.qtfm.cn/channels/353596/programs/14647412/'
+server = Server(r"C:\Program Files\browsermob-proxy-2.1.4\bin\browsermob-proxy.bat")
+server.start()
+proxy = server.create_proxy()
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
+chrome_options = Options()
+chrome_options.add_argument('--ignore-certificate-errors')
+chrome_options.add_argument('--proxy-server={0}'.format(proxy.proxy))
+chrome_options.add_argument('--disable-gpu')
+
+driver = webdriver.Chrome(
+    # executable_path=chrome_driver,
+    chrome_options=chrome_options
+)
+
+
+proxy.new_har(base_url)
+driver.get(base_url)
+
+result = proxy.har
+
+print(result)
+
+server.stop()
+driver.quit()
