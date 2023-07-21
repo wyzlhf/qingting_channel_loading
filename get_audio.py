@@ -42,6 +42,8 @@ class AudioLoader(object):
             url = item.get('request', '没有request数据').get('url', '没有url数据')
             if 'https://hwod-sign.qtfm.cn/m4a/' in url:
                 actual_audio_url_list.append(url)
+        BMPserver.stop()
+        driver.quit()
         if len(actual_audio_url_list) == 0:
             print('好像出错了')
         else:
